@@ -26,7 +26,9 @@ app.use(cors({
     'http://localhost:5173',
     'http://localhost:5174',
     'http://localhost:3000',
-    process.env.CORS_ORIGIN || 'https://trustinfra-frontend.onrender.com',
+    /\.vercel\.app$/,
+    /\.railway\.app$/,
+    process.env.CORS_ORIGIN || 'https://trustinfra2.vercel.app',
   ],
   credentials: true,
 }));
