@@ -1,0 +1,26 @@
+{
+  "name": "trust-infra-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "contracts"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspaces",
+    "build": "npm run build --workspaces",
+    "test": "npm run test --workspaces",
+    "compile:contracts": "hardhat compile",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost"
+  },
+  "devDependencies": {
+    "hardhat": "^2.19.1",
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "typescript": "^5.2.2",
+    "ts-node": "^10.9.1",
+    "dotenv": "^16.3.1",
+    "@openzeppelin/contracts": "^4.9.3",
+    "@openzeppelin/contracts-upgradeable": "^4.9.3",
+    "ethers": "^6.8.1"
+  }
+}
