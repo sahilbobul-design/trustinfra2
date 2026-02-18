@@ -12,6 +12,8 @@ RUN npx tsc --outDir dist
 # Production stage
 FROM node:20-alpine
 WORKDIR /app
+# Add compatibility for binaries like MongoDB in Alpine
+RUN apk add --no-cache libc6-compat
 COPY package*.json ./
 # ONLY production dependencies
 RUN npm install --omit=dev
