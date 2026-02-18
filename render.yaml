@@ -1,0 +1,35 @@
+# Render.com deployment configuration
+# Free tier: 1 backend web service + 1 frontend static site
+# Deploy at: https://dashboard.render.com/
+
+services:
+  # ── Backend (Node.js + WebSocket) ──────────────────────────────────────────
+  - type: web
+    name: trustinfra-backend
+    runtime: node
+    rootDir: apps/backend
+    buildCommand: npm install && npx tsc --outDir dist
+    startCommand: node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        value: ""          # Set in Render dashboard → leave blank for mock mode
+      - key: CORS_ORIGIN
+        value: https://trustinfra-frontend.onrender.com
+    healthCheckPath: /health
+    plan: free
+
+  # ── Frontend (React/Vite static site) ──────────────────────────────────────
+  - type: web
+    name: trustinfra-frontend
+    runtime: node
+    rootDir: apps/frontend-local
+    buildCommand: npm install && npm run build
+    startCommand: npx serve -s dist -l 3000
+    envVars:
+      - key: VITE_API_URL
+        value: https://trustinfra-backend.onrender.com
+    plan: free
