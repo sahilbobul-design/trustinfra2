@@ -1,26 +1,33 @@
-# Multi-stage production build
-FROM node:20-alpine AS builder
+# Multi-stage production build (Debian Slim for binary compatibility)
+FROM node:20-slim AS builder
 WORKDIR /app
-# Install dependencies for building
+
+# Install build dependencies for native modules
+RUN apt-get update && apt-get install -y \
+    python3 \
+    make \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
 RUN npm install
-# Copy source
 COPY . .
-# Build
 RUN npx tsc --outDir dist
 
 # Production stage
-FROM node:20-alpine
+FROM node:20-slim
 WORKDIR /app
-# Add compatibility for binaries like MongoDB in Alpine
-RUN apk add --no-cache libc6-compat
+
+# Install runtime dependencies for mongo-memory-server if needed
+RUN apt-get update && apt-get install -y \
+    libcurl4 \
+    libssl3 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
-# ONLY production dependencies
 RUN npm install --omit=dev
-# Copy built files
 COPY --from=builder /app/dist ./dist
 
-# Railway/Render specific
 EXPOSE 5000
 ENV NODE_ENV=production
 ENV PORT=5000
