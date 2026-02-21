@@ -1,11 +1,11 @@
 {
     "$schema": "https://railway.app/railway.schema.json",
     "build": {
-        "builder": "DOCKERFILE"
+        "builder": "NIXPACKS"
     },
     "deploy": {
-        "startCommand": "node dist/index.js",
-        "healthcheckPath": "/health",
+        "startCommand": "python app.py",
+        "healthcheckPath": "/chain",
         "healthcheckTimeout": 100,
         "restartPolicyType": "ON_FAILURE"
     }
